@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "726916778902",
+    "project_id": "kukubase",
+    "storage_bucket": "kukubase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726916778902:android:c67f769273de8f017eabb7",
+        "android_client_info": {
+          "package_name": "com.example.nuur_din"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726916778902-slfa2jatb1rqsbna9sd70ud2ia1f415l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nuur_din",
+            "certificate_hash": "3c67fa15092a7e21f36ad700e713cc9442190b97"
+          }
+        },
+        {
+          "client_id": "726916778902-0r2bmb58fcq9r83p29h65vm4dd9s1p8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL2-WrYvvxqHDaLG1tnYHq26NpwNEdYos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726916778902-0r2bmb58fcq9r83p29h65vm4dd9s1p8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
