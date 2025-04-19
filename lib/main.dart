@@ -1,36 +1,37 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nuur_din/features/app/splash_screen/splash_screen.dart';
 import 'package:nuur_din/features/user_auth/presentation/pages/home_page.dart';
 import 'package:nuur_din/features/user_auth/presentation/pages/login_page.dart';
 import 'package:nuur_din/features/user_auth/presentation/pages/sign_up_page.dart';
 
-Future<void> main() async {
+void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: FirebaseOptions(
-        apiKey: "AIzaSyDL2-WrYvvxqHDaLG1tnYHq26NpwNEdYos",
-        appId: "1:726916778902:android:c67f769273de8f017eabb7",
-        messagingSenderId: "540215271818",
-        projectId: "flutter-firebase-9c136",
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  await initHiveForFlutter();
 
-  // 🔥 Initialize Firebase App Check
-  await FirebaseAppCheck.instance.activate(
-   // androidProvider: AndroidProvider.debug, // Use debug mode during development
-    androidProvider: AndroidProvider.playIntegrity, // Play Integrity for Android
 
+  final HttpLink httpLink = HttpLink(
+    'https://django-socialmediaapp-s2ky.onrender.com/graphql/',
   );
 
-  runApp(MyApp());
+  final GraphQLClient client = GraphQLClient(
+    cache: GraphQLCache(store: HiveStore()),
+    link: httpLink,
+  );
+
+  runApp(
+    GraphQLProvider(
+      client: ValueNotifier(client),
+      child: CacheProvider(
+        child: MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,10 +42,10 @@ class MyApp extends StatelessWidget {
       title: 'KUKU App',
       routes: {
         '/': (context) => SplashScreen(
-          child: LoginPage(),
+          child: HomePage(),
         ),
-        '/login': (context) => LoginPage(),
-        '/signUp': (context) => SignUpPage(),
+        // '/login': (context) => LoginPage(),
+        // '/signUp': (context) => SignUpPage(),
         '/home': (context) => HomePage(),
       },
     );

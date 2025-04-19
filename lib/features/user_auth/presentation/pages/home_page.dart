@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:nuur_din/features/user_auth/presentation/pages/settings.dart';
-import 'package:nuur_din/features/user_auth/presentation/pages/products.dart';
-import 'package:nuur_din/features/user_auth/presentation/pages/profile.dart';
-import 'package:nuur_din/features/user_auth/presentation/pages/detect_deseases.dart';
-import 'package:nuur_din/features/user_auth/presentation/models/chart_msg.dart';
-import 'package:nuur_din/features/user_auth/presentation/models/inbox.dart';
 
+import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:nuur_din/features/user_auth/presentation/pages/settings.dart';
+import 'package:nuur_din/features/user_auth/presentation/models/post_model.dart';
+import 'package:nuur_din/features/user_auth/presentation/pages/post_details.dart';
+import 'package:nuur_din/features/user_auth/presentation/pages/detect_deseases.dart';
 
 import '../../../../global/common/toast.dart';
-import '../models/create_data.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,10 +28,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> get _pages => [
-    HomeContent(),
+  PostPage(),
     DetectDiseasesPage(),
-    productscreen(),
-    chatpage(),
+    // productscreen(),
 
 
     SettingsPage(
@@ -83,54 +80,19 @@ class _HomePageState extends State<HomePage> {
                 child: Text('KUKU App', style: TextStyle(color: Colors.white, fontSize: 24)),
               ),
 
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('charting'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => chatscreen(
-                        receiverId: '1', // Pass the actual user ID
-                        receiverName: 'John Doe', // Pass the user's name
-                      ),
-                    ),
-                  );
 
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('create'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  CreateDataPage(),
-                    ),
-                  );
-                },
-              ),
               ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text('Profile'),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfilePage(),
-                    ),
-                  );
-                },
-              ),
+
+                } ),
 
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text("Sign Out"),
                 onTap: () {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushNamed(context, "/login");
-                  showToast(message: "User is successfully signed Out");
+
                 },
               ),
             ],
@@ -155,81 +117,149 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Updated HomeContent class to include posts
-class HomeContent extends StatefulWidget {
-  @override
-  _HomeContentState createState() => _HomeContentState();
-}
 
-class _HomeContentState extends State<HomeContent> {
-  List<bool> likedStatus = [false, false, false]; // Stores like status for each post
 
-  void _toggleLike(int index) {
-    setState(() {
-      likedStatus[index] = !likedStatus[index];
-    });
-  }
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> posts = [
-      {
-        "title": "Fresh Organic Chicken",
-        "image": "https://plus.unsplash.com/premium_photo-1661767136966-38d5999f819a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8b3JnYW5pYyUyMGNoaWNrZW58ZW58MHx8MHx8fDA%3D",
-      },
-      {
-        "title": "Premium Chicken Feed",
-        "image": "https://images.unsplash.com/photo-1569466593977-94ee7ed02ec9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8b3JnYW5pYyUyMGNoaWNrZW58ZW58MHx8MHx8fDA%3D",
-      },
-      {
-        "title": "High-Quality Eggs",
-        "image": "https://media.istockphoto.com/id/1056759048/photo/organic-farm-and-free-range-chicken-eggs.webp?a=1&b=1&s=612x612&w=0&k=20&c=LRLYanTiPafKmFL1yAs2FAA1GfQOEsFHaarkR5EUHw4=",
-      },
-    ];
+    final HttpLink httpLink = HttpLink(
+      'https://django-socialmediaapp-s2ky.onrender.com/graphql/',
+    );
 
-    return ListView.builder(
-      padding: EdgeInsets.all(10),
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        return Card(
-          elevation: 3,
-          margin: EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network(posts[index]["image"]!, height: 150, width: double.infinity, fit: BoxFit.cover),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(posts[index]["title"]!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        likedStatus[index] ? Icons.favorite : Icons.favorite_border,
-                        color: likedStatus[index] ? Colors.red : Colors.grey,
-                      ),
-                      onPressed: () => _toggleLike(index),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        // Implement comment functionality
-                      },
-                      icon: Icon(Icons.comment, color: Colors.teal),
-                      label: Text("Comment"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+    ValueNotifier<GraphQLClient> client = ValueNotifier(
+      GraphQLClient(
+        link: httpLink,
+        cache: GraphQLCache(store: InMemoryStore()),
+      ),
+    );
+
+    return GraphQLProvider(
+      client: client,
+      child: MaterialApp(
+        home: PostPage(),
+      ),
     );
   }
 }
+
+
+
+  @override
+  class PostPage extends StatelessWidget {
+  final String query = r'''
+    query {
+      posts {
+        title
+        photo
+        caption
+        createdAt
+        updatedAt
+        viewers
+      }
+    }
+  ''';
+
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
+  appBar: AppBar(
+  title: Text("Posts"),
+  ),
+  body: Query(
+  options: QueryOptions(document: gql(query)),
+  builder: (QueryResult result, {VoidCallback? refetch, FetchMore? fetchMore}) {
+  if (result.isLoading) {
+  return Center(child: CircularProgressIndicator());
+  }
+
+  if (result.hasException) {
+  return Center(child: Text("Error: ${result.exception.toString()}"));
+  }
+
+  final posts = result.data?['posts'];
+  if (posts == null || posts.isEmpty) {
+  return Center(child: Text("No Posts Found!"));
+  }
+
+  return ListView.builder(
+  padding: EdgeInsets.all(10),
+  itemCount: posts.length,
+  itemBuilder: (context, index) {
+  final post = posts[index];
+
+
+  return InkWell(
+  onTap: () {
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+  builder: (_) => PostDetailPage(post: post),
+  ),
+  );
+  },
+  child: Container(
+  margin: EdgeInsets.symmetric(vertical: 8),
+  padding: EdgeInsets.all(16),
+  decoration: BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(12),
+  boxShadow: [
+  BoxShadow(
+  color: Colors.black12,
+  blurRadius: 6,
+  offset: Offset(0, 3),
+  ),
+  ],
+  ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (post['photo'] != null && post['photo'].toString().isNotEmpty)
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              post['photo'],
+
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+        SizedBox(height: 8),
+        Text(
+          post['title'] ?? "No Title",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          post['caption'] ?? "No caption",
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Views: ${post['viewers'] ?? 0}"),
+            Text(post['updatedAt'] ?? ""),
+
+          ],
+        ),
+      ],
+    ),
+
+  ),
+  );
+  },
+  );
+  },
+  ),
+  );
+  }
+  }
+
+
+
 
 

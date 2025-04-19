@@ -1,7 +1,7 @@
 
 
 
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class ForgetPasswordPage extends StatelessWidget {
 
   void _resetPassword(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
+     // await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
       showToast(message: "Password reset email sent!");
       Navigator.pop(context);
     } catch (e) {
