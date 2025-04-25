@@ -16,7 +16,8 @@ void main() async {
 
 
   final HttpLink httpLink = HttpLink(
-    'https://django-socialmediaapp-s2ky.onrender.com/graphql/',
+    'https://192.168.1.87:8000/graphql/',
+    // 'https://django-socialmediaapp-s2ky.onrender.com/graphql/',
   );
 
   final GraphQLClient client = GraphQLClient(

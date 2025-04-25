@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nuur_din/features/user_auth/presentation/pages/settings.dart';
@@ -242,10 +243,14 @@ class MyApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Views: ${post['viewers'] ?? 0}"),
-            Text(post['updatedAt'] ?? ""),
-
+            Text(
+              post['updatedAt'] != null
+                  ? GetTimeAgo.parse(DateTime.parse(post['updatedAt']))
+                  : "",
+            ),
           ],
-        ),
+        )
+
       ],
     ),
 

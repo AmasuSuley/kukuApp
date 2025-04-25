@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   carousel_slider: ^5.0.0
   image_picker: ^1.1.2
+  get_time_ago: ^2.3.0
   cached_network_image: ^3.4.1
   firebase_app_check: ^0.3.2+2
   fluttertoast: ^8.2.11

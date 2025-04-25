@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 
 class PostDetailPage extends StatelessWidget {
   final Map<String, dynamic> post;
@@ -22,7 +23,11 @@ class PostDetailPage extends StatelessWidget {
             SizedBox(height: 10),
             Text("Views: ${post['viewers']}"),
             SizedBox(height: 20),
-            Text("Time: ${post['updatedAt']}"),
+            Text(
+              post['updatedAt'] != null
+                  ? GetTimeAgo.parse(DateTime.parse(post['updatedAt']))
+                  : "",
+            ),
             SizedBox(height: 20),
             Text("Comments", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
 
